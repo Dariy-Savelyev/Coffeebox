@@ -1,4 +1,7 @@
 ﻿#include <iostream>
+#include <iomanip>
+#include <string>
+#include <unistd.h>
 
 using namespace std;
 
@@ -10,16 +13,20 @@ void getEarnings();
 void welcome();
 void printMenu();
 double getBYN();
+void makeCoffee(int choose);
 double buyLatte(double byn);
 double buyEspresso(double byn);
 double buyKapuchino(double byn);
-int serviceMenu(int pin);
+int enterServiceMenu(int pin);
 
-const double PRICE_OF_LATTE = 2.0;
-const double PRICE_OF_ESPRESSO = 1.5;
-const double PRICE_OF_KAPUCHINO = 3.3;
+const double PRICE_OF_LATTE = 2.7;
+const double PRICE_OF_ESPRESSO = 2.2;
+const double PRICE_OF_KAPUCHINO = 2.4;
+const string LATTE = "Latte";
+const string CAPPUCINO = "Cappuccino";
+const string ESPRESSO = "Espresso";
 const int MAX_CUPS = 700;
-const int PIN = 9472;
+const int PIN = 7815;
 bool isOpen = false;
 int cups = 0;
 double earnings = 0.0;
@@ -31,49 +38,39 @@ int main() {
     int pin = 0;
     cups = 3;
 
-
-
     welcome();
-    cout << endl;
 
     while (true)
     {
         cout << endl;
-        if (cups == 0) {
+        if (cups == 0)
+        {
         cout << "There are no cups in the Coffee Box. Please come back later.";
-        return 1;
-        } else {
+        }
+        else
+        {
             printMenu();
-            cout << endl << "Please choose option [0-5]: ";
+            cout << endl << "Please choose option [0-4]: ";
             cin >> userChoice;
 
             if (userChoice == 1)
             {
+                system("clear");
                 balance += getBYN();
             }
-            else if (userChoice == 2)
+            else if (userChoice == 2 or userChoice == 3 or userChoice == 4)
             {
-                balance = buyLatte(balance);
-            }
-            else if (userChoice == 3)
-            {
-                balance = buyEspresso(balance);
-            }
-            else if (userChoice == 4)
-            {
-                balance = buyKapuchino(balance);
-            }
-            else if (userChoice == 5)
-            {
-                serviceMenu(pin);
+                makeCoffee(userChoice);
             }
             else if (userChoice == 0)
             {
-                break;
+                system("clear");
+                enterServiceMenu(pin);
             }
             else
             {
-                cout << endl << "ERROR: No such option. " << endl;
+                system("clear");
+                cout << "ERROR: No such option. " << endl;
             }
         }
     }
@@ -94,41 +91,35 @@ void printMenu()
     cout << "2. Buy Latte" << "\t\t" << PRICE_OF_LATTE << " BYN" << endl;
     cout << "3. Buy Espresso" << "\t\t" << PRICE_OF_ESPRESSO << " BYN" << endl;
     cout << "4. Buy Cappuccino" << "\t" << PRICE_OF_KAPUCHINO << " BYN" << endl << endl;
-    cout << "5. Service Menu" << endl;
-    cout << "0. EXIT" << endl;
+    cout << "0. Service Menu" << endl;
 }
 
 double getBYN()
 {
     double byn = 0.0;
 
-    cout << endl << "We accept the following denominations: 2 BYN, 1 BYN, 50 kopecks, 20 kopecks, 10 kopecks" << endl;
+    cout << "We accept the following denominations: 2 BYN, 1 BYN, 50 kopecks, 20 kopecks, 10 kopecks" << endl;
     cout << "Please insert coins: ";
     cin >> byn;
 
     if (byn == 2)
     {
-        byn = 2;
         cout << endl << "You have deposited " << byn << " BYN" << endl;
     }
     else if (byn == 1)
     {
-        byn = 1;
         cout << endl << "You have deposited " << byn << " BYN" << endl;
     }
     else if (byn == 0.5)
     {
-        byn = 0.5;
         cout << endl << "You have deposited " << byn << " BYN" << endl;
     }
     else if (byn == 0.2)
     {
-        byn = 0.2;
         cout << endl << "You have deposited " << byn << " BYN" << endl;
     }
     else if (byn == 0.1)
     {
-        byn = 0.1;
         cout << endl << "You have deposited " << byn << " BYN" << endl;
     }
     else
@@ -141,69 +132,46 @@ double getBYN()
     return byn;
 }
 
-double buyLatte(double byn)
+void makeCoffee(int choose)
 {
-    double change = 0.0;
+    string name = "";
 
-    if (PRICE_OF_LATTE > byn)
+    system("clear");
+    if (balance < PRICE_OF_ESPRESSO or balance < PRICE_OF_KAPUCHINO or balance < PRICE_OF_LATTE)
     {
-        cout << endl << "Please deposit more money!" << endl;
-    }
-    else
+        cout << "Please deposit more money!" << endl;
+    } else
     {
-        change = byn - PRICE_OF_LATTE;
+        if (choose == 2)
+        {
+            name = LATTE;
+            balance -= PRICE_OF_LATTE;
+
+        } else if (choose == 3)
+        {
+            name = ESPRESSO;
+            balance -= PRICE_OF_ESPRESSO;
+        } else if (choose == 4)
+        {
+            name = CAPPUCINO;
+            balance -= PRICE_OF_KAPUCHINO;
+        } else
+        {
+            cout << endl << "ERROR: No such option." << endl;
+        }
         cups--;
-        cout << endl << "Your Latte is coming, please wait..." << endl;
-        cout << "Your Latte is ready. " << endl;
+        cout << "Your " << name << " is coming, please wait..." << endl;
+        sleep(5);
+        cout << "Your " << name << " is ready. " << endl;
         cout << "Please take your cup away." << endl;
+        sleep(5);
+        system("clear");
     }
-
-    return change;
 }
 
-double buyEspresso(double byn)
+int enterServiceMenu(int pin)
 {
-    double change = 0.0;
-
-    if (PRICE_OF_ESPRESSO > byn)
-    {
-        cout << endl << "Please deposit more money!" << endl;
-    }
-    else
-    {
-        change = byn - PRICE_OF_ESPRESSO;
-        cups--;
-        cout << endl << "Your Espresso is coming, please wait..." << endl;
-        cout << "Your Espresso is ready. " << endl;
-        cout << "Please take your cup away." << endl;
-    }
-
-    return change;
-}
-
-double buyKapuchino(double byn)
-{
-    double change = 0.0;
-
-    if (PRICE_OF_KAPUCHINO > byn)
-    {
-        cout << endl << "Please deposit more money!" << endl;
-    }
-    else
-    {
-        change = byn - PRICE_OF_KAPUCHINO;
-        cups--;
-        cout << endl << "Your Cappuccino is coming, please wait..." << endl;
-        cout << "Your Cappuccino is ready. " << endl;
-        cout << "Please take your cup away." << endl;
-    }
-
-    return change;
-}
-
-int serviceMenu(int pin)
-{
-    cout << endl <<"Warning, this menu is only for staff" << endl;
+    cout << "Warning, this menu is only for staff" << endl;
     cout << "Enter service PIN code: ";
     cin >> pin;
 
@@ -220,13 +188,12 @@ int serviceMenu(int pin)
     return pin;
 }
 
-
-
-
-void printServiceMenu() {
+void printServiceMenu()
+{
     int choose = 0;
 
-    while(true) {
+    while(true)
+    {
         cout << endl << "Service menu" << endl;
         cout << "-------------" << endl << endl;
         cout << "Earnings" << "\t\t" << earnings << " BYN" << endl << endl;
@@ -237,7 +204,8 @@ void printServiceMenu() {
 
         cout << endl << "Please choose the option [0 - 3]: ";
         cin >> choose;
-        if (choose == 0) {
+        if (choose == 0)
+        {
             isOpen = false;
             return;
         }
@@ -246,55 +214,85 @@ void printServiceMenu() {
     }
 }
 
-void serviceMenuSelectionProcessing(int choose) {
-    if (choose == 1) {
+void serviceMenuSelectionProcessing(int choose)
+{
+    if (choose == 1)
+    {
+        system("clear");
         openCoffeeBox();
-    } else if (choose == 2) {
+    }
+    else if (choose == 2)
+    {
+        system("clear");
         setCups();
-    } else if (choose == 3) {
+    }
+    else if (choose == 3)
+    {
+        system("clear");
         getEarnings();
-    } else {
+    }
+    else
+    {
+        system("clear");
         cout << endl << "ERROR: No such option." << endl;
     }
 }
 
-void openCoffeeBox() {
-    if (isOpen) {
-        cout << endl << "The Coffee box is already open." << endl;
-    } else {
+void openCoffeeBox()
+{
+    if (isOpen)
+    {
+        cout << "The Coffee box is already open." << endl;
+    } else
+    {
         isOpen = true;
-        cout << endl << "You have opened the Coffee Box." << endl;
+        cout << "You have opened the Coffee Box." << endl;
     }
 
 }
-void setCups() {
+
+void setCups()
+{
     int cupsAmount = 0;
-    if (!isOpen) {
-        cout << endl << "Coffee Box is closed. You must open the Coffee Box first!" << endl;
-    } else {
-        cout << endl << "Cups in the coffee box " << cups << " pcs." << endl;
+    if (!isOpen)
+    {
+        cout << "Coffee Box is closed. You must open the Coffee Box first!" << endl;
+    }
+    else
+    {
+        cout << "Cups in the coffee box " << cups << " pcs." << endl;
         cout << "How many cups do you want to set up?  ";
         cin >> cupsAmount;
 
-        if (cupsAmount < 0 or cups + cupsAmount > MAX_CUPS) {
-            cout << endl << "ERROR: The number of cups cannot be less or greater than 700" << endl;
-        } else {
+        if (cupsAmount < 0 or cups + cupsAmount > MAX_CUPS)
+        {
+            cout << "ERROR: The number of cups cannot be less or greater than 700" << endl;
+        }
+        else
+        {
             cups += cupsAmount;
-            cout << endl << "SUCCESS: You have set up " << cupsAmount << " cups." << endl;
+            cout << "SUCCESS: You have set up " << cupsAmount << " cups." << endl;
             cout << "Cups in the coffee box " << cups << " pcs." << endl;
         }
     }
 }
 
-void getEarnings() {
-    if (!isOpen) {
-        cout << endl << "ERROR: Coffee Box is closed." << endl;
+void getEarnings()
+{
+    if (!isOpen)
+    {
+        cout << "ERROR: Coffee Box is closed." << endl;
         cout << "You must open the Coffee Box first!" << endl;
-    } else {
-        if (earnings == 0.0) {
-            cout << endl << "There is no earnings in the Coffee Box.";
-        } else {
-            cout << endl << "SUCCESS: You have picked up " << earnings << " BYN" << endl;
+    }
+    else
+    {
+        if (earnings == 0.0)
+        {
+            cout << "There is no earnings in the Coffee Box.";
+        }
+        else
+        {
+            cout << "SUCCESS: You have picked up " << earnings << " BYN" << endl;
             earnings = 0.0;
         }
     }
