@@ -15,9 +15,9 @@ double buyEspresso(double byn);
 double buyKapuchino(double byn);
 int enterServiceMenu(int pin);
 
-const double PRICE_OF_LATTE = 3.4;
-const double PRICE_OF_ESPRESSO = 2.6;
-const double PRICE_OF_KAPUCHINO = 3;
+const double PRICE_OF_LATTE = 2.7;
+const double PRICE_OF_ESPRESSO = 2.2;
+const double PRICE_OF_KAPUCHINO = 2.4;
 const int MAX_CUPS = 700;
 const int PIN = 7815;
 bool isOpen = false;
