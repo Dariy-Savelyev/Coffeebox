@@ -1,4 +1,7 @@
 ﻿#include <iostream>
+#include <iomanip>
+#include <string>
+#include <unistd.h>
 
 using namespace std;
 
@@ -10,6 +13,7 @@ void getEarnings();
 void welcome();
 void printMenu();
 double getBYN();
+void makeCoffee(int choose);
 double buyLatte(double byn);
 double buyEspresso(double byn);
 double buyKapuchino(double byn);
@@ -18,6 +22,9 @@ int enterServiceMenu(int pin);
 const double PRICE_OF_LATTE = 2.7;
 const double PRICE_OF_ESPRESSO = 2.2;
 const double PRICE_OF_KAPUCHINO = 2.4;
+const string LATTE = "Latte";
+const string CAPPUCINO = "Cappuccino";
+const string ESPRESSO = "Espresso";
 const int MAX_CUPS = 700;
 const int PIN = 7815;
 bool isOpen = false;
@@ -32,15 +39,15 @@ int main() {
     cups = 3;
 
     welcome();
-    
     while (true)
     {
         cout << endl;
-        if (cups == 0) 
+        if (cups == 0)
         {
         cout << "There are no cups in the Coffee Box. Please come back later.";
-        } 
-        else 
+        }
+        else
+
         {
             printMenu();
             cout << endl << "Please choose option [0-4]: ";
@@ -51,21 +58,8 @@ int main() {
                 system("clear");
                 balance += getBYN();
             }
-            else if (userChoice == 2)
+            else if (userChoice == 2 or userChoice == 3 or userChoice == 4)
             {
-                system("clear");
-                balance = buyLatte(balance);
-            }
-            else if (userChoice == 3)
-            {
-                system("clear");
-                balance = buyEspresso(balance);
-            }
-            else if (userChoice == 4)
-            {
-                system("clear");
-                balance = buyKapuchino(balance);
-            }
             else if (userChoice == 0)
             {
                 system("clear");
@@ -135,65 +129,40 @@ double getBYN()
 
     return byn;
 }
+void makeCoffee(int choose)
+    string name = "";
 
-double buyLatte(double byn)
-{
-    double change = 0.0;
-
-    if (PRICE_OF_LATTE > byn)
+    system("clear");
+    if (balance < PRICE_OF_ESPRESSO or balance < PRICE_OF_KAPUCHINO or balance < PRICE_OF_LATTE)
     {
         cout << "Please deposit more money!" << endl;
-    }
-    else
+    } else
     {
-        change = byn - PRICE_OF_LATTE;
+        if (choose == 2)
+        {
+            name = LATTE;
+            balance -= PRICE_OF_LATTE;
+
+        } else if (choose == 3)
+        {
+            name = ESPRESSO;
+            balance -= PRICE_OF_ESPRESSO;
+        } else if (choose == 4)
+        {
+            name = CAPPUCINO;
+            balance -= PRICE_OF_KAPUCHINO;
+        } else
+        {
+            cout << endl << "ERROR: No such option." << endl;
+        }
         cups--;
-        cout << "Your Latte is coming, please wait..." << endl;
-        cout << "Your Latte is ready. " << endl;
+        cout << "Your " << name << " is coming, please wait..." << endl;
+        sleep(5);
+        cout << "Your " << name << " is ready. " << endl;
         cout << "Please take your cup away." << endl;
+        sleep(5);
+        system("clear");
     }
-
-    return change;
-}
-
-double buyEspresso(double byn)
-{
-    double change = 0.0;
-
-    if (PRICE_OF_ESPRESSO > byn)
-    {
-        cout << "Please deposit more money!" << endl;
-    }
-    else
-    {
-        change = byn - PRICE_OF_ESPRESSO;
-        cups--;
-        cout << "Your Espresso is coming, please wait..." << endl;
-        cout << "Your Espresso is ready. " << endl;
-        cout << "Please take your cup away." << endl;
-    }
-
-    return change;
-}
-
-double buyKapuchino(double byn)
-{
-    double change = 0.0;
-
-    if (PRICE_OF_KAPUCHINO > byn)
-    {
-        cout << "Please deposit more money!" << endl;
-    }
-    else
-    {
-        change = byn - PRICE_OF_KAPUCHINO;
-        cups--;
-        cout << "Your Cappuccino is coming, please wait..." << endl;
-        cout << "Your Cappuccino is ready. " << endl;
-        cout << "Please take your cup away." << endl;
-    }
-
-    return change;
 }
 
 int enterServiceMenu(int pin)
@@ -277,7 +246,7 @@ void openCoffeeBox()
     }
 
 }
-
+  
 void setCups() 
 {
     int cupsAmount = 0;
@@ -303,7 +272,7 @@ void setCups()
         }
     }
 }
-
+  
 void getEarnings() 
 {
     if (!isOpen) 
