@@ -36,7 +36,7 @@ double balance = 0.0;
 int main() {
     int userChoice = 0;
     int pin = 0;
-    cups = 3;
+    cups = 7;
 
     while (true)
     {
@@ -101,7 +101,7 @@ void printMenu()
     system("clear");
     cout << "Menu" << endl;
     cout << "-----" << endl << endl;
-    if (cups <= 3)
+    if (cups <= 5)
     {
         cout << "WARNING: Cups left" << setw(5) << cups << " pcs." << endl<< endl;
     }
